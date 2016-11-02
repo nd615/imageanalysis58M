@@ -1,0 +1,20 @@
+#For overlay
+img5 = readImage("Experiment001_Overlay001.jpg")
+overlayCountNuc <- function(img5) {
+  display(img5, method = "raster")
+  bimg5 <- img5[,,3]
+  display(bimg5, method = "raster")
+  gimg5 <- channel(bimg5, "gray") #grayscales image
+  display(gimg5, method = "raster")
+  gimg5.blur <- gblur(gimg5, sigma = 5) #blur the image
+  display(gimg5.blur, method = "raster")
+  otsu(gimg5.blur) #gives a threshold value using Otsu algorithm
+  gimg5.blur.thres <- gimg5.blur > otsu(gimg5.blur)#0-1 binary image
+  display(gimg5.blur.thres, method = "raster")
+  gimg5.blur.thres.count <- bwlabel(gimg5.blur.thres) #'count' the blobs
+  overlayNucNo <- max(bwlabel(gimg5.blur.thres))
+  #ouputs the count to us
+  cat('Number of nuclei in this image =', max(bwlabel(gimg5.blur.thres)),'\n')
+  return(overlayNucNo)
+}
+overlayNucNo <- overlayCountNuc(img5)
